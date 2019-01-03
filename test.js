@@ -1,6 +1,6 @@
 'use strict'
 const test = require('tap').test
-const { createLockCb } = require('./index.js')
+const createLockCb = require('./index.js').createLockCb
 
 test('lock(<process>)', () => {
   const lock = createLockCb()
