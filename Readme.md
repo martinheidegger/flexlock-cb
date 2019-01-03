@@ -2,8 +2,8 @@
 
 <a href="https://travis-ci.org/martinheidegger/flexlock-cb"><img src="https://travis-ci.org/martinheidegger/flexlock-cb.svg?branch=master" alt="Build Status"/></a>
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![Maintainability](https://api.codeclimate.com/v1/badges/64b42212bd9ebab25cda/maintainability)](https://codeclimate.com/github/martinheidegger/flexlock-cb/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/64b42212bd9ebab25cda/test_coverage)](https://codeclimate.com/github/martinheidegger/flexlock-cb/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0515ec5a0831b36b5992/maintainability)](https://codeclimate.com/github/martinheidegger/flexlock-cb/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0515ec5a0831b36b5992/test_coverage)](https://codeclimate.com/github/martinheidegger/flexlock-cb/test_coverage)
 
 `flexlock-cb` is a **very small**, **memory-concious**, **flexible** locking library without
 dependencies but with `typescript` definitions. Optimized even further than [`flexlock`](https://github.com/martinheidegger/flexlock) for the use with callbacks instead of promises.
