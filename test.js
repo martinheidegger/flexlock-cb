@@ -86,13 +86,6 @@ test('Lock with timeout', t => {
   ])
 })
 
-test('One lock with promise in handler and timeout', t => {
-  const lock = createLockCb()
-  return lock(quickUnlock(new Error('a')))
-    .then(() => t.fail('The error should be propagated'))
-    .catch(err => t.equals(err.message, 'a', 'error a is properly passed through from the promise'))
-})
-
 test('Two locks with promise in handler and timeout', t => {
   const lock = createLockCb()
   return Promise.all([
