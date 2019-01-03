@@ -264,21 +264,22 @@ test('multiple release listeners at the same lock', t => {
 
 test('unlocking with empty triggers', t => {
   const lock = createLockCb()
-  return lock(quickUnlock())
-    .then(() => wait(1))
-    .then(() => lock(quickUnlock()))
-    .then(() => wait(1))
+  return lockTwice(lock)
 })
 
 test('once released then empty triggers', t => {
   const lock = createLockCb()
-  const p = lock(quickUnlock())
-    .then(() => wait(1))
-    .then(() => lock(quickUnlock()))
-    .then(() => wait(1))
+  const p = lockTwice(lock)
   lock.released(() => {})
   return p
 })
+
+function lockTwice (lock) {
+  return lock(quickUnlock())
+    .then(() => wait(1))
+    .then(() => lock(quickUnlock()))
+    .then(() => wait(1))
+}
 
 function quickUnlock (error, data) {
   return unlockDelay(1, error, data)
