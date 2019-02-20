@@ -48,7 +48,7 @@ lock(unlock => {
   unlock(null, 'important')
 }, (err, data) => {
   err === null
-  data === 'hello'
+  data === 'important'
   // This way you can simply pass the error or data to a callback
 })
 ```
