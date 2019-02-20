@@ -31,16 +31,6 @@ lock(unlock => {
 })
 ```
 
-### _Timeouts_ in case anther lock never returns
-
-```javascript
-lock(unlock => {}) // This never releases the lock
-lock(unlock => { /* this will never be called */ }, 500)
-  .catch(err => {
-    err.code === 'ETIMEOUT'
-  })
-```
-
 ### _Propagation_ of errors and results to a callback
 
 ```javascript
@@ -50,6 +40,15 @@ lock(unlock => {
   err === null
   data === 'important'
   // This way you can simply pass the error or data to a callback
+})
+```
+
+### _Timeouts_ in case anther lock never returns
+
+```javascript
+lock(unlock => {}) // This never releases the lock
+lock(unlock => { /* Because the former lock is never released, this will not be called */ }, 500, (err) => {
+  err.code === 'ETIMEOUT'
 })
 ```
 
