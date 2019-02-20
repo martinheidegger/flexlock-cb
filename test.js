@@ -12,6 +12,24 @@ test('lock(<process>, <timeout>)', () => {
   return lock(quickUnlock(), 10)
 })
 
+test('lock(<process>, <callback>)', t => {
+  const lock = createLockCb()
+  lock(quickUnlock(null, 'hello'), (err, arg) => {
+    t.equals(err, null)
+    t.equals(arg, 'hello')
+    t.end()
+  })
+})
+
+test('Err: lock(<process>, <callback>)', t => {
+  const lock = createLockCb()
+  const myErr = new Error()
+  lock(quickUnlock(myErr), err => {
+    t.equals(err, myErr)
+    t.end()
+  })
+})
+
 test('lock(<process>, <timeout>, <null>)', () => {
   const lock = createLockCb()
   return lock(quickUnlock(), 10, null)

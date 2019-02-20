@@ -6,6 +6,7 @@ type reject = (error: Error) => void
 
 export interface FlexLockCbCore {
   <T> (process: process<T>): Promise<T>
+  <T> (process: process<T>, callback: callback<T>): void
   <T> (process: process<T>, timeout: number): Promise<T>
   <T> (process: process<T>, timeout: number, callback: null | undefined): Promise<T>
   <T> (process: process<T>, timeout: number, callback: callback<T>): void
