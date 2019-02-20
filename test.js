@@ -303,34 +303,34 @@ test('simple sync-wrap api', t => {
   lock.sync(() => t.end())
 })
 
-function assertDomainError (template, assertError) {
+function assertDomainError (template, myErr, t) {
+  const ctx = { continued: false }
   // Try & catch errors get caught immediately
   setImmediate(() => {
     domain.active.removeAllListeners('error')
-    domain.active.once('error', assertError)
-    template()
+    domain.active.once('error', thrownErr => {
+      t.equals(thrownErr, myErr)
+      t.equals(ctx.continued, false)
+      setImmediate(() => {
+        t.equals(ctx.continued, true)
+        t.end()
+      })
+    })
+    template(ctx)
   })
 }
 
 test('sync-wrap error case', t => {
   const lock = createLockCb()
   const myErr = new Error()
-  let continued = false
-  assertDomainError(() => {
+  assertDomainError((ctx) => {
     lock.syncWrap(() => {
       throw myErr
     })()
     lock.sync(() => {
-      continued = true
+      ctx.continued = true
     })
-  }, thrownErr => {
-    t.equals(thrownErr, myErr)
-    t.equals(continued, false)
-    setImmediate(() => {
-      t.equals(continued, true)
-      t.end()
-    })
-  })
+  }, myErr, t)
 })
 
 test('sync waiting', t => {
@@ -354,22 +354,14 @@ test('sync waiting', t => {
 test('sync-waiting error case', t => {
   const lock = createLockCb()
   const myErr = new Error()
-  let continued = false
-  assertDomainError(() => {
+  assertDomainError((ctx) => {
     lock.sync(() => {
       throw myErr
     })
     lock.sync(() => {
-      continued = true
+      ctx.continued = true
     })
-  }, thrownErr => {
-    t.equals(thrownErr, myErr)
-    t.equals(continued, false)
-    setImmediate(() => {
-      t.equals(continued, true)
-      t.end()
-    })
-  })
+  }, myErr, t)
 })
 
 function lockTwice (lock) {
