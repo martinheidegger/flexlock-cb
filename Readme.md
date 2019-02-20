@@ -96,4 +96,4 @@ fn('hello', 'world')
 
 ### License
 
-MIT
+[MIT](./LICENSE)
