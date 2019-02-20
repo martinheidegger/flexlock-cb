@@ -17,7 +17,7 @@ to use it. This makes it sturdier and more practical in many cases.
 ### _simple_ basic API
 
 ```javascript
-const createLock = require('flexlock-cb')
+const createLock = require('flexlock-cb').createLockCb
 
 const lock = createLock()
 
@@ -77,6 +77,21 @@ lock.released(() => {
 })
 
 await lock.released() // Promise API available as well
+```
+
+### _sync_ handlers, for when you want to make sure that other locks are done
+
+```javascript
+const lock = createLock()
+
+lock.sync(() => {
+  // no unlock function (automatically unlocked after method is done)
+})
+
+const fn = lock.syncWrap((foo, bar) => {
+  // no unlock function, arguments are passed-through
+})
+fn('hello', 'world')
 ```
 
 ### License

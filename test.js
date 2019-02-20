@@ -1,6 +1,8 @@
 'use strict'
 const test = require('tap').test
 const createLockCb = require('./index.js').createLockCb
+// eslint-disable-next-line node/no-deprecated-api
+const domain = require('domain')
 
 test('lock(<process>)', () => {
   const lock = createLockCb()
@@ -290,6 +292,84 @@ test('once released then empty triggers', t => {
   const p = lockTwice(lock)
   lock.released(() => {})
   return p
+})
+
+test('simple sync-wrap api', t => {
+  const lock = createLockCb()
+  lock.syncWrap((a, b) => {
+    t.equals(a, 'hello')
+    t.equals(b, 'world')
+  })('hello', 'world')
+  lock.sync(() => t.end())
+})
+
+function assertDomainError (template, assertError) {
+  // Try & catch errors get caught immediately
+  setImmediate(() => {
+    domain.active.removeAllListeners('error')
+    domain.active.once('error', assertError)
+    template()
+  })
+}
+
+test('sync-wrap error case', t => {
+  const lock = createLockCb()
+  const myErr = new Error()
+  let continued = false
+  assertDomainError(() => {
+    lock.syncWrap(() => {
+      throw myErr
+    })()
+    lock.sync(() => {
+      continued = true
+    })
+  }, thrownErr => {
+    t.equals(thrownErr, myErr)
+    t.equals(continued, false)
+    setImmediate(() => {
+      t.equals(continued, true)
+      t.end()
+    })
+  })
+})
+
+test('sync waiting', t => {
+  const lock = createLockCb()
+  let waited = false
+  let called = false
+  lock(unlock => {
+    setImmediate(() => {
+      t.equals(called, false)
+      waited = true
+      unlock()
+    })
+  })
+  lock.sync(() => {
+    t.equals(waited, true)
+    called = true
+  })
+  lock.sync(() => t.end())
+})
+
+test('sync-waiting error case', t => {
+  const lock = createLockCb()
+  const myErr = new Error()
+  let continued = false
+  assertDomainError(() => {
+    lock.sync(() => {
+      throw myErr
+    })
+    lock.sync(() => {
+      continued = true
+    })
+  }, thrownErr => {
+    t.equals(thrownErr, myErr)
+    t.equals(continued, false)
+    setImmediate(() => {
+      t.equals(continued, true)
+      t.end()
+    })
+  })
 })
 
 function lockTwice (lock) {
