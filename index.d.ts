@@ -19,7 +19,7 @@ export interface FlexLockCb extends FlexLockCbCore {
   released(): Promise<void>
   released(onRelease: () => void): void
 
-  cb: FlexLockCbCore
+  cb: FlexLockCb
 }
 
 export interface CreateLockCb {
