@@ -26,7 +26,7 @@ lock(unlock => {
   unlock()
 })
 lock(unlock => {
-  // done after the previous block
+  // will wait for the 
   unlock()
 })
 ```
@@ -34,13 +34,28 @@ lock(unlock => {
 ### _Propagation_ of errors and results to a callback
 
 ```javascript
-lock(unlock => {
+function callback (err, data) {
+  // err === null
+  // data === 'important'
+}
+
+lock(
+  unlock => unlock(null, 'important'),
+  callback
+)
+```
+
+### _Promises_ are returned if no callback is added
+
+```javascript
+const promise = lock(unlock => {
   unlock(null, 'important')
-}, (err, data) => {
-  err === null
-  data === 'important'
-  // This way you can simply pass the error or data to a callback
-})
+}) // Without passing in a callback, promises will be created
+
+promise
+  .catch(err => {})
+  .then(data => {})
+  // This way you can support both callback and promise based APIs
 ```
 
 ### _Timeouts_ in case anther lock never returns
@@ -52,28 +67,14 @@ lock(unlock => { /* Because the former lock is never released, this will not be 
 })
 ```
 
-### _Promises_ are returned if no callback is added
-
-```javascript
-lock(unlock => {
-  unlock(null, 'important')
-}) // Without passing in a callback, promises will be created
-  .catch(err => {})
-  .then(data => {})
-  // This way you can support both callback and promise based APIS
-})
-```
-
 ### _release_ handlers both once and for every release
 
 ```javascript
-const lock = createLock(() => {
-  // called every time all locks are released
-})
+function onEveryRelease () {}
+function onNextRelease () {}
 
-lock.released(() => {
-  // called once, next all locks are released
-})
+const lock = createLock(onEveryRelease) // Called everytime the lock is released
+lock.released(onNextRelease) // Called next time the lock is released
 
 await lock.released() // Promise API available as well
 ```
