@@ -52,7 +52,7 @@ lock(unlock => { /* Because the former lock is never released, this will not be 
 })
 ```
 
-### Propagation of errors and results to _Promises_
+### _Promises_ are returned if no callback is added
 
 ```javascript
 lock(unlock => {
@@ -76,6 +76,15 @@ lock.released(() => {
 })
 
 await lock.released() // Promise API available as well
+```
+
+### Like for Promises, two separate callbacks can be specified
+
+```javascript
+function onSuccess (data) {}
+function onError (err) {}
+
+lock(unlock => unlock(), onSucess, onError)
 ```
 
 ### _sync_ handlers, for when you want to make sure that other locks are done
