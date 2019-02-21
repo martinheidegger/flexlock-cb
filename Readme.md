@@ -61,8 +61,11 @@ promise
 ### _Timeouts_ in case anther lock never returns
 
 ```javascript
-lock(unlock => {}) // This never releases the lock
-lock(unlock => { /* Because the former lock is never released, this will not be called */ }, 500, (err) => {
+function neverUnlock (unlock) { /* Due to a bug it never unlocks */ }
+function neverCalled () {}
+
+lock(neverUnlock)
+lock(neverCalled, 500, err => {
   err.code === 'ETIMEOUT'
 })
 ```
