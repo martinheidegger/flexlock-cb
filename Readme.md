@@ -96,14 +96,39 @@ lock(unlock => unlock(), onSucess, onError)
 ```javascript
 const lock = createLock()
 
-lock.sync(() => {
+const result = await lock.sync(() => {
   // no unlock function (automatically unlocked after method is done)
+  return 123
 })
 
+result === 123 // the result is passed to the callback
+```
+
+Its also possible to wrap a method into a sync lock:
+
+```javascript
 const fn = lock.syncWrap((foo, bar) => {
   // no unlock function, arguments are passed-through
 })
 fn('hello', 'world')
+```
+
+Be aware that any errors that might occur will by-default be uncaught
+exceptions. You can handle those errors by passing an error handler
+when creating the lock or the wrapper:
+
+```javascript
+const lock = createLockCb(null, err => {
+  // Handle any error, for example: emit('error', err)
+})
+const fn = lock.syncWrap(() => {
+  throw new Error('error')
+})
+const fn2 = lock.syncWrap(() => {
+  throw new Error('error')
+}, err => {
+  // Handle the error for this wrap case
+})
 ```
 
 ### License

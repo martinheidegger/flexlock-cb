@@ -351,31 +351,46 @@ test('sync waiting', t => {
   lock.sync(() => t.end())
 })
 
-test('sync-waiting error case', t => {
-  const lock = createLockCb()
-  const myErr = new Error()
-  assertDomainError((ctx) => {
-    lock.sync(() => {
-      throw myErr
-    })
-    lock.sync(() => {
-      ctx.continued = true
-    })
-  }, myErr, t)
-})
-
-test('sync-error', t => {
+test('syncWrap-error', t => {
   const stack = []
   const err = new Error()
-  const lock = createLockCb(null, err => stack.push(err))
-  lock.sync(() => {
-    throw err
-  })
+  const lock = createLockCb(null, err => stack.push({ err, parent: true }))
+  lock.syncWrap(() => { throw err })()
+  lock.syncWrap(() => { throw err }, err => stack.push({ err, parent: false }))()
   t.deepEqual(stack, [])
   setImmediate(() => {
-    t.deepEqual(stack, [
-      err
-    ])
+    setImmediate(() => {
+      t.deepEqual(stack, [
+        { err, parent: true },
+        { err, parent: false }
+      ])
+      t.end()
+    })
+  })
+})
+
+test('sync result', t => {
+  const lock = createLockCb()
+  lock.sync(() => 'hi', (err, data) => {
+    t.equals(err, null)
+    t.equals(data, 'hi')
+    t.end()
+  })
+})
+
+test('sync error', t => {
+  const lock = createLockCb()
+  const err = new Error()
+  lock.sync(() => { throw err }, thrownErr => {
+    t.equals(thrownErr, err)
+    t.end()
+  })
+})
+
+test('sync promise', t => {
+  const lock = createLockCb()
+  lock.sync(() => 'hi').then(data => {
+    t.equal(data, 'hi')
     t.end()
   })
 })

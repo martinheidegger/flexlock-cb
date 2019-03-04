@@ -1,7 +1,7 @@
 type unlock = () => void
 type callback <T> = (error?: Error, data?: T) => void
 type process<T> = (unlock: callback<T>) => void
-type syncProcess<Args> = (...Args) => void
+type syncProcess<Args, Result = void> = (...Args) => Result
 type resolve<T> = (result: T) => void
 type reject = (error: Error) => void
 
@@ -19,8 +19,13 @@ export interface FlexLockCbCore {
 export interface FlexLockCb extends FlexLockCbCore {
   released(): Promise<void>
   released(onRelease: () => void): void
-  syncWrap <Args> (process: syncProcess<Args>): syncProcess<Args>
-  sync <Args> (process: syncProcess<Args>): void
+  syncWrap <Args, Result> (process: syncProcess<Args, Result>, onSyncError?: reject): syncProcess<Args, void>
+  sync <Args, Result> (process: syncProcess<Args, Result>): Promise<Result>
+  sync <Args, Result> (process: syncProcess<Args, Result>, callback: callback<Result>): void
+  sync <Args, Result> (process: syncProcess<Args, Result>, timeout: number): Promise<Result>
+  sync <Args, Result> (process: syncProcess<Args, Result>, timeout: number, callback: callback<Result>): void
+  sync <Args, Result> (process: syncProcess<Args, Result>, resolve: resolve<Result>, reject: reject, timeout: number): void
+  sync <Args, Result> (process: syncProcess<Args, Result>, timeout: number, resolve: resolve<Result>, reject: reject): void
 
   cb: FlexLockCb
 }
