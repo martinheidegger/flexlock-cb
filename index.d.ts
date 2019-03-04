@@ -26,7 +26,7 @@ export interface FlexLockCb extends FlexLockCbCore {
 }
 
 export interface CreateLockCb {
-  (onEveryRelease?: () => void): FlexLockCb
+  (onEveryRelease?: () => void, onSyncError?: (err: Error) => void): FlexLockCb
 }
 
 export declare const createLockCb: CreateLockCb

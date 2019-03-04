@@ -364,6 +364,22 @@ test('sync-waiting error case', t => {
   }, myErr, t)
 })
 
+test('sync-error', t => {
+  const stack = []
+  const err = new Error()
+  const lock = createLockCb(null, err => stack.push(err))
+  lock.sync(() => {
+    throw err
+  })
+  t.deepEqual(stack, [])
+  setImmediate(() => {
+    t.deepEqual(stack, [
+      err
+    ])
+    t.end()
+  })
+})
+
 function lockTwice (lock) {
   return lock(quickUnlock())
     .then(() => wait(1))
