@@ -78,6 +78,29 @@ test('lock(<process>, <onFulFillment>, <onRejected>, <timeout>)', t => {
   }, 10)
 })
 
+test('immediate lock on unlock waits a little', t => {
+  const lock = createLockCb()
+  const stack = []
+  lock(setImmediate, () => {
+    lock(unlock => {
+      stack.push(1)
+      unlock()
+    })
+    lock(unlock => {
+      stack.push(2)
+      unlock()
+    })
+    t.deepEqual(stack, [])
+    setImmediate(() => {
+      t.deepEqual(stack, [1, 2])
+      t.end()
+    })
+  })
+  setImmediate(() => {
+    t.deepEqual(stack, [])
+  })
+})
+
 test('Lock with deferred unlock', t => {
   const lock = createLockCb()
   let firstLockDone = false
@@ -310,11 +333,8 @@ function assertDomainError (template, myErr, t) {
     domain.active.removeAllListeners('error')
     domain.active.once('error', thrownErr => {
       t.equals(thrownErr, myErr)
-      t.equals(ctx.continued, false)
-      setImmediate(() => {
-        t.equals(ctx.continued, true)
-        t.end()
-      })
+      t.equals(ctx.continued, true)
+      t.end()
     })
     template(ctx)
   })
