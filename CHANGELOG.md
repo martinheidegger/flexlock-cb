@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.1](https://github.com/martinheidegger/flexlock-cb/compare/v2.0.0...v2.0.1) (2019-04-13)
+
+
+### Bug Fixes
+
+* data is passed to rejected-handler in case an error happens ([67f0010](https://github.com/martinheidegger/flexlock-cb/commit/67f0010))
+
+
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
 # [2.0.0](https://github.com/martinheidegger/flexlock-cb/compare/v1.2.0...v2.0.0) (2019-03-05)
 
 
