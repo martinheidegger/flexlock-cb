@@ -261,6 +261,18 @@ test('released started after a lock shouldnt misfire with a delay', t => {
   )
 })
 
+test('error data to be passed to onRejected error', t => {
+  const lock = createLockCb()
+  const error = new Error('some error')
+  lock(function (unlock) {
+    unlock(error, 'data passed')
+  }, (thrownError, data) => {
+    t.equals(thrownError, error)
+    t.equals(data, 'data passed')
+    t.end()
+  })
+})
+
 test('making sure that the response is passed through', t => {
   const lock = createLockCb()
   return lock(function (unlock) {
