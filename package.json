@@ -19,8 +19,8 @@
   "license": "MIT",
   "devDependencies": {
     "standard": "^12.0.1",
-    "standard-version": "^5.0.0",
-    "tap": "^12.1.1"
+    "standard-version": "^5.0.2",
+    "tap": "^12.6.1"
   },
   "directories": {
     "test": "test"
