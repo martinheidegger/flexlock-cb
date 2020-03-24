@@ -108,26 +108,39 @@ Its also possible to wrap a method into a sync lock:
 
 ```javascript
 const fn = lock.syncWrap((foo, bar) => {
-  // no unlock function, arguments are passed-through
+  /**
+   - No unlock function.
+   - Arguments are passed-through.
+   - Executed will be asynchronously.
+   - Return value will be ignored.
+   */
+  foo === 'hello'
+  bar === 'world'
 })
 fn('hello', 'world')
 ```
 
-Be aware that any errors that might occur will by-default be uncaught
-exceptions. You can handle those errors by passing an error handler
-when creating the lock or the wrapper:
+Be aware that any errors that might occur will by-default result in uncaught
+exceptions!
+
+You can handle those errors by passing an error handler when creating the lock:
 
 ```javascript
 const lock = createLockCb(null, err => {
-  // Handle any error, for example: emit('error', err)
+  // Here you can handle any error, for example: emit('error', err)
 })
 const fn = lock.syncWrap(() => {
   throw new Error('error')
 })
+```
+
+... or by adding a error handler directly when wrapping:
+
+```javascript
 const fn2 = lock.syncWrap(() => {
   throw new Error('error')
 }, err => {
-  // Handle the error for this wrap case
+  // Handle an error thrown in the sync-wrap
 })
 ```
 
