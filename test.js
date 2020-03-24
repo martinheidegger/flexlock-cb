@@ -1,8 +1,6 @@
 'use strict'
 const test = require('tap').test
 const createLockCb = require('./index.js').createLockCb
-// eslint-disable-next-line node/no-deprecated-api
-const domain = require('domain')
 
 test('lock(<process>)', () => {
   const lock = createLockCb()
@@ -355,32 +353,18 @@ test('simple sync-wrap api', t => {
   lock.sync(() => t.end())
 })
 
-function assertDomainError (template, myErr, t) {
-  const ctx = { continued: false }
-  // Try & catch errors get caught immediately
-  setImmediate(() => {
-    domain.active.removeAllListeners('error')
-    domain.active.once('error', thrownErr => {
-      t.equals(thrownErr, myErr)
-      t.equals(ctx.continued, true)
-      t.end()
-    })
-    template(ctx)
-  })
-}
-
-test('sync-wrap error case', t => {
-  const lock = createLockCb()
-  const myErr = new Error()
-  assertDomainError((ctx) => {
+if (/^v(\d+)/.exec(process.version) > 4) {
+  test('sync-wrap error case', t => {
+    const lock = createLockCb()
+    t.expectUncaughtException()
     lock.syncWrap(() => {
-      throw myErr
+      throw new Error('my-error')
     })()
     lock.sync(() => {
-      ctx.continued = true
+      setImmediate(() => t.end())
     })
-  }, myErr, t)
-})
+  })
+}
 
 test('sync waiting', t => {
   const lock = createLockCb()
