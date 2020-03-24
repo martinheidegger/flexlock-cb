@@ -18,8 +18,8 @@
   "author": "Martin Heidegger <martin.heidegger@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "standard": "^12.0.1",
-    "standard-version": "^5.0.2",
+    "standard": "^14.3.3",
+    "standard-version": "^7.1.0",
     "tap": "^12.6.1"
   },
   "directories": {
