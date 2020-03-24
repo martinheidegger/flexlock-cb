@@ -101,6 +101,23 @@ test('immediate lock on unlock waits a little', t => {
   })
 })
 
+test('400 operations unlock within a frame', t => {
+  const lock = createLockCb()
+  const stack = []
+  const expectedStack = []
+  for (let i = 0; i < 400; i++) {
+    expectedStack.push(i)
+    lock(unlock => {
+      stack.push(i)
+      unlock()
+    })
+  }
+  setImmediate(() => {
+    t.deepEqual(stack, expectedStack)
+    t.end()
+  })
+})
+
 test('Lock with deferred unlock', t => {
   const lock = createLockCb()
   let firstLockDone = false
