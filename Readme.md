@@ -161,6 +161,38 @@ const fn2 = lock.syncWrap(() => {
 })
 ```
 
+### Typescript recommendation
+
+Figuring out the proper typing was quite tricky for flexlock-cb.
+To make things easier for users, it exports a `Callbacks` type that
+can be used to reduce  
+
+```typescript
+import { Callbacks, createLockCb } from 'flexlock-cb'
+
+const lock = createLockCb()
+
+//
+// Overloading for the two use cases (return type void or Promise)
+// If you would like to improve this, vote for
+// https://github.com/Microsoft/TypeScript/issues/29182
+//
+function fn (foo: string, bar: number, ...cb: Callbacks<string>): void
+function fn (foo: string, bar: number): Promise<string>
+function fn (foo: string, bar: number, ...cb) {
+  return lock(() => `${foo} ${bar}`, 0, ...cb)
+}
+
+// Separate definitions with the support for timeouts
+import { CallbacksWithTimeout } from 'flexlock-cb'
+
+function fnTime (foo: string, bar: number, ...cb: CallbacksWithTimeout<string>): void
+function fnTime (foo: string, bar: number, timeout?: number): Promise<string>
+function fnTime (foo: string, bar: number, ...cb) {
+  return lock(() => `${foo} ${bar}`, ...cb)
+}
+```
+
 ### License
 
 [MIT](./LICENSE)

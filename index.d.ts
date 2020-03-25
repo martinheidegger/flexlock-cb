@@ -1,31 +1,35 @@
-type unlock = () => void
-type callback <T> = (error?: Error, data?: T) => void
-type process<T> = (unlock: callback<T>) => void
-type syncProcess<Args, Result = void> = (...Args) => Result
-type resolve<T> = (result: T) => void
+type callback<Result> = (error?: Error, data?: Result) => void
+type process<Result> = (unlock: callback<Result>) => void
+type resolve<Result> = (result: Result) => void
 type reject = (error: Error) => void
 
+export type Unlock<Result> = callback<Result>
+
+export type Callbacks <T> =
+  [callback<T>] |
+  [resolve<T>, reject]
+
+export type CallbacksWithTimeout <T> =
+  [callback<T>] |
+  [callback<T>, timeout] |
+  [timeout, callback<T>] |
+  [resolve<T>, reject] |
+  [resolve<T>, reject, timeout] |
+  [timeout, resolve<T>, reject]
+
 export interface FlexLockCbCore {
-  <T> (process: process<T>): Promise<T>
-  <T> (process: process<T>, callback: callback<T>): void
-  <T> (process: process<T>, timeout: number): Promise<T>
-  <T> (process: process<T>, timeout: number, callback: null | undefined): Promise<T>
-  <T> (process: process<T>, timeout: number, callback: callback<T>): void
-  <T> (process: process<T>, callback: callback<T>, timeout: number): void
-  <T> (process: process<T>, resolve: resolve<T>, reject: reject, timeout: number): void
-  <T> (process: process<T>, timeout: number, resolve: resolve<T>, reject: reject): void
+  <Result> (process: process<Result>, timeout?: number): Promise<Result>
+  <Result> (process: process<Result>, ...cb: CallbacksWithTimeout<Result>): void
 }
 
 export interface FlexLockCb extends FlexLockCbCore {
   released(): Promise<void>
   released(onRelease: () => void): void
-  syncWrap <Args, Result> (process: syncProcess<Args, Result>, onSyncError?: reject): syncProcess<Args, void>
-  sync <Args, Result> (process: syncProcess<Args, Result>): Promise<Result>
-  sync <Args, Result> (process: syncProcess<Args, Result>, callback: callback<Result>): void
-  sync <Args, Result> (process: syncProcess<Args, Result>, timeout: number): Promise<Result>
-  sync <Args, Result> (process: syncProcess<Args, Result>, timeout: number, callback: callback<Result>): void
-  sync <Args, Result> (process: syncProcess<Args, Result>, resolve: resolve<Result>, reject: reject, timeout: number): void
-  sync <Args, Result> (process: syncProcess<Args, Result>, timeout: number, resolve: resolve<Result>, reject: reject): void
+
+  syncWrap <Fn extends (...args) => any> (process: Fn, onError?: (error: Error) => any): (...args: Parameters<Fn>) => void
+
+  sync <Args extends Array<any>, Result> (process: () => Result, timeout?: number): Promise<Result>
+  sync <Args extends Array<any>, Result> (process: () => Result, ...cb: CallbacksWithTimeout<Result>): void
 
   cb: FlexLockCb
 }
