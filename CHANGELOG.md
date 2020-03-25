@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/martinheidegger/flexlock-cb/compare/v2.0.2...v2.1.0) (2020-03-25)
+
+
+### Features
+
+* **sync-wrap:** added flexlock reference to be used in sync operation ([8e10399](https://github.com/martinheidegger/flexlock-cb/commit/8e10399f54422e7dd159fd54c3d86fda72da25ef))
+* **sync-wrap:** Added timeout support ([16a3e69](https://github.com/martinheidegger/flexlock-cb/commit/16a3e69694d9ef548cce98a715abd8c473fe1d2f))
+* **types:** Improved type declarations and added section on typescript information ([84b0d53](https://github.com/martinheidegger/flexlock-cb/commit/84b0d537d7b2d5a338801cc84f62005c61e21f46))
+
+
+### Bug Fixes
+
+* **docs:** Extracted links to footnote ([5e9fa8b](https://github.com/martinheidegger/flexlock-cb/commit/5e9fa8bbd0af88e7f266ec10c3a30d4d81551030))
+* **docs:** Used createLockCb function signature consistently ([a746401](https://github.com/martinheidegger/flexlock-cb/commit/a746401818f8e2936015572e587ae285fe746e26))
+* **test:** Fixing coverage for node > 4 ([b165554](https://github.com/martinheidegger/flexlock-cb/commit/b1655548bdc9a37ece8801d83e041304ab12044f))
+
 ### [2.0.2](https://github.com/martinheidegger/flexlock-cb/compare/v2.0.1...v2.0.2) (2020-03-24)
 
 ## [2.0.1](https://github.com/martinheidegger/flexlock-cb/compare/v2.0.0...v2.0.1) (2019-04-13)
