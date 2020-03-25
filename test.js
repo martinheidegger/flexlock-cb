@@ -346,11 +346,32 @@ test('once released then empty triggers', t => {
 
 test('simple sync-wrap api', t => {
   const lock = createLockCb()
-  lock.syncWrap((a, b) => {
-    t.equals(a, 'hello')
-    t.equals(b, 'world')
-  })('hello', 'world')
+  t.equals(
+    lock.syncWrap((a, b) => {
+      t.equals(a, 'hello')
+      t.equals(b, 'world')
+    })('hello', 'world'),
+    undefined
+  )
   lock.sync(() => t.end())
+})
+
+test('sync-wrap with timeout', t => {
+  const lock = createLockCb()
+  lock(() => {})
+  lock.syncWrap(() => {}, 1, error => {
+    t.equals(error.code, 'ETIMEOUT')
+    t.end()
+  })()
+})
+
+test('sync-wrap with timeout and onError flipped', t => {
+  const lock = createLockCb()
+  lock(() => {})
+  lock.syncWrap(() => {}, error => {
+    t.equals(error.code, 'ETIMEOUT')
+    t.end()
+  }, 1)()
 })
 
 const isGreaterNode4 = /^v(\d+)/.exec(process.version)[1] > 4
