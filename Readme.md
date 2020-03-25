@@ -1,18 +1,35 @@
 # flexlock-cb
 
-<a href="https://travis-ci.org/martinheidegger/flexlock-cb"><img src="https://travis-ci.org/martinheidegger/flexlock-cb.svg?branch=master" alt="Build Status"/></a>
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![Maintainability](https://api.codeclimate.com/v1/badges/0515ec5a0831b36b5992/maintainability)](https://codeclimate.com/github/martinheidegger/flexlock-cb/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/0515ec5a0831b36b5992/test_coverage)](https://codeclimate.com/github/martinheidegger/flexlock-cb/test_coverage)
+[![Build Status][cistatus-img]][cistatus-lnk]
+[![JavaScript Style Guide][js-style-img]](https://standardjs.com)
+[![Maintainability][maintain-img]][maintain-lnk]
+[![Test Coverage][coverage-img]][coverage-lnk]
+
+[cistatus-lnk]: https://travis-ci.org/martinheidegger/flexlock-cb
+[cistatus-img]: https://travis-ci.org/martinheidegger/flexlock-cb.svg?branch=master
+[js-style-img]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
+[maintain-img]: https://api.codeclimate.com/v1/badges/0515ec5a0831b36b5992/maintainability
+[maintain-lnk]: https://codeclimate.com/github/martinheidegger/flexlock-cb/maintainability
+[coverage-img]: https://api.codeclimate.com/v1/badges/0515ec5a0831b36b5992/test_coverage
+[coverage-lnk]: https://codeclimate.com/github/martinheidegger/flexlock-cb/test_coverage
 
 `flexlock-cb` is a **very small**, **memory-concious**, **flexible** locking library without
-dependencies but with `typescript` definitions. Optimized even further than [`flexlock`](https://github.com/martinheidegger/flexlock) for the use with callbacks instead of promises.
+dependencies but with `typescript` definitions (see in the bottom). Optimized even further than
+[`flexlock`][flexlock] for the use with callbacks instead of promises.
 
 `npm i flexlock-cb --save`
 
-It is similar to other in-memory locking library like [`mutexify`](https://github.com/mafintosh/mutexify), [`mutex-js`](https://github.com/danielglennross/mutex-js), [`await-lock`](https://www.npmjs.com/package/await-lock), and [many more](https://www.npmjs.com/search?q=promise+lock), but with more flexibility in how
-to use it. This makes it sturdier and more practical in many cases.
+It is similar to other in-memory locking library like [`mutexify`][mutexify],
+[`mutex-js`][mutex-js], [`await-lock`][await-lock], and [many more](many-more),
+but with more flexibility in how to use it.
 
+This makes it sturdier and more practical in many cases.
+
+[flexlock]: https://github.com/martinheidegger/flexlock
+[mutexify]: https://github.com/mafintosh/mutexify
+[mutex-js]: https://github.com/danielglennross/mutex-js
+[await-lock]: https://www.npmjs.com/package/await-lock
+[many-more]: https://www.npmjs.com/search?q=promise+lock
 
 ### _simple_ basic API
 
