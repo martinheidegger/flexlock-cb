@@ -29,8 +29,8 @@ export interface FlexLockCb extends FlexLockCbCore {
   syncWrap <Fn extends (...args) => any> (process: Fn, timeout?: number, onError?: (error: Error) => any): (...args: Parameters<Fn>) => void
   syncWrap <Fn extends (...args) => any> (process: Fn, onError?: (error: Error) => any, timeout?: number): (...args: Parameters<Fn>) => void
 
-  sync <Args extends Array<any>, Result> (process: () => Result, timeout?: number): Promise<Result>
-  sync <Args extends Array<any>, Result> (process: () => Result, ...cb: CallbacksWithTimeout<Result>): void
+  sync <Args extends Array<any>, Result> (process: (lock: this) => Result, timeout?: number): Promise<Result>
+  sync <Args extends Array<any>, Result> (process: (lock: this) => Result, ...cb: CallbacksWithTimeout<Result>): void
 
   cb: FlexLockCb
 }

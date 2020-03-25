@@ -121,6 +121,12 @@ const result = await lock.sync(() => {
 result === 123 // the result is passed to the callback
 ```
 
+In case you need it, a reference to the lock is also passed in:
+
+```javascript
+const result = await lock.sync(lock => { /* ... */ })
+```
+
 Its also possible to wrap a method into a sync lock:
 
 ```javascript
