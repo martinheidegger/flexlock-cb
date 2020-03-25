@@ -34,9 +34,9 @@ This makes it sturdier and more practical in many cases.
 ### _simple_ basic API
 
 ```javascript
-const createLock = require('flexlock-cb').createLockCb
+const { createLockCb } = require('flexlock-cb')
 
-const lock = createLock()
+const lock = createLockCb()
 
 lock(unlock => {
   // done before the next block
@@ -93,7 +93,7 @@ lock(neverCalled, 500, err => {
 function onEveryRelease () {}
 function onNextRelease () {}
 
-const lock = createLock(onEveryRelease) // Called everytime the lock is released
+const lock = createLockCb(onEveryRelease) // Called everytime the lock is released
 lock.released(onNextRelease) // Called next time the lock is released
 
 await lock.released() // Promise API available as well
@@ -111,7 +111,7 @@ lock(unlock => unlock(), onSucess, onError)
 ### _sync_ handlers, for when you want to make sure that other locks are done
 
 ```javascript
-const lock = createLock()
+const lock = createLockCb()
 
 const result = await lock.sync(() => {
   // no unlock function (automatically unlocked after method is done)
