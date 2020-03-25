@@ -353,7 +353,8 @@ test('simple sync-wrap api', t => {
   lock.sync(() => t.end())
 })
 
-if (/^v(\d+)/.exec(process.version) > 4) {
+const isGreaterNode4 = /^v(\d+)/.exec(process.version)[1] > 4
+if (isGreaterNode4) {
   test('sync-wrap error case', t => {
     const lock = createLockCb()
     t.expectUncaughtException()
