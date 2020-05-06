@@ -11,10 +11,9 @@ export type Callbacks <T> =
   [resolve<T>, reject]
 
 export type CallbacksWithTimeout <T> =
-  [callback<T>] |
+  Callbacks<T> |
   [callback<T>, timeout] |
   [timeout, callback<T>] |
-  [resolve<T>, reject] |
   [resolve<T>, reject, timeout] |
   [timeout, resolve<T>, reject]
 
