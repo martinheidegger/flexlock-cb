@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/martinheidegger/flexlock-cb/compare/v2.1.1...v2.2.0) (2020-05-07)
+
+
+### Features
+
+* **destroy:** api to destroy locks and distribute destroy errors ([6c6ea9e](https://github.com/martinheidegger/flexlock-cb/commit/6c6ea9e7bc920e09a65ada5aefe7d1b4058ae0d7))
+
 ### [2.1.1](https://github.com/martinheidegger/flexlock-cb/compare/v2.1.0...v2.1.1) (2020-03-25)
 
 
