@@ -1,6 +1,8 @@
 'use strict'
-function toPromise (rawLock, process, timeout) {
-  return new Promise(rawLock.bind(null, process, timeout))
+const createLock = require('./lib/createLock.js')
+
+function toPromise (lock, process, timeout) {
+  return new Promise(lock.bind(null, process, timeout))
 }
 
 function noop () {}
@@ -13,29 +15,30 @@ function throwErr (err) {
   })
 }
 
-module.exports = function applyFlexApi (rawLock, onSyncError) {
+module.exports = function createLockCb (onEveryRelease, onSyncError) {
+  const lock = createLock(onEveryRelease)
   if (typeof onSyncError !== 'function') {
     onSyncError = throwErr
   }
   const flexLock = function (process, timeout, onFulfilled, onRejected) {
     if (typeof timeout === 'function') {
       if (typeof onFulfilled === 'function') {
-        return rawLock(process, onRejected, timeout, onFulfilled)
+        return lock(process, onRejected, timeout, onFulfilled)
       }
-      return rawLock(process, onFulfilled, function (data) {
+      return lock(process, onFulfilled, function (data) {
         timeout(null, data)
       }, timeout)
     }
     if (typeof onFulfilled !== 'function') {
-      return toPromise(rawLock, process, timeout)
+      return toPromise(lock, process, timeout)
     }
     if (typeof onRejected !== 'function') {
-      return rawLock(process, timeout, function (data) {
+      return lock(process, timeout, function (data) {
         onFulfilled(null, data)
       }, onFulfilled)
     }
 
-    rawLock(process, timeout, onFulfilled, onRejected)
+    lock(process, timeout, onFulfilled, onRejected)
   }
   flexLock.syncWrap = function (syncProcess, timeout, onError) {
     if (typeof timeout === 'function') {
@@ -66,6 +69,6 @@ module.exports = function applyFlexApi (rawLock, onSyncError) {
     }, timeout, onFulfilled, onRejected)
   }
   flexLock.cb = flexLock
-  flexLock.released = rawLock.released
+  flexLock.released = lock.released
   return flexLock
 }
