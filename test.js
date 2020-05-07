@@ -450,6 +450,84 @@ test('sync promise', t => {
   })
 })
 
+test('simple destroy', () => {
+  const lock = createLockCb()
+  return lock.destroy()
+})
+
+test('destroy during operation waits for operation to finish', t => {
+  const lock = createLockCb()
+  let opFinished = false
+  lock(
+    cb => setTimeout(cb, 10, null, 'hello'),
+    (err, data) => {
+      opFinished = true
+      t.equals(err, null)
+      t.equals(data, 'hello')
+    }
+  )
+  setImmediate(lock.destroy, () => {
+    t.equals(opFinished, true)
+    t.end()
+  })
+})
+
+test('destroy will stop operations in queue', t => {
+  const lock = createLockCb()
+  let opFinished = false
+  lock(cb => setTimeout(cb, 10))
+  lock(
+    () => t.fail('this should not be called'),
+    (err, data) => {
+      opFinished = true
+      t.equals(err.message, 'Lock destroyed.')
+      t.equals(err.code, 'E_DESTROYED')
+      t.equals(data, undefined)
+    }
+  )
+  setImmediate(lock.destroy, () => {
+    t.equals(opFinished, true)
+    t.end()
+  })
+})
+
+test('custom error on destroy should be passed on', t => {
+  const lock = createLockCb()
+  const destroyError = new Error('some error')
+  lock.destroy(destroyError)
+  lock(
+    () => t.fail('this should not be called'),
+    (err, data) => {
+      t.equals(err, destroyError)
+      t.equals(data, undefined)
+      t.end()
+    }
+  )
+})
+
+test('repeat destroying will show the first destroy message', t => {
+  const lock = createLockCb()
+  const err1 = new Error()
+  const err2 = new Error()
+  return lock.destroy(err1)
+    .then(result => {
+      t.deepEqual(result, { destroyed: err1, released: true })
+      return lock.destroy(err2)
+    })
+    .then(result => {
+      t.deepEqual(result, { destroyed: err1, released: true })
+      return lock(cb => {
+        setImmediate(cb)
+      })
+        .then(
+          () => t.fail('Error expected'),
+          err => {
+            t.equals(err, err1)
+          }
+        )
+    })
+})
+
 function lockTwice (lock) {
   return lock(quickUnlock())
     .then(() => wait(1))

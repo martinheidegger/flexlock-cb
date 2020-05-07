@@ -167,6 +167,25 @@ const fn2 = lock.syncWrap(() => {
 })
 ```
 
+### Destroying locks
+
+When closing down an application you may want to also close all operations and prevent
+future operations:
+
+```javascript
+import { createLockCb } from 'flexlock-cb'
+
+const lock = createLockCb()
+lock.destroy(new Error('lock destroyed') /* optional */)
+try {
+  lock(cb => {
+    // will not be executed
+  })
+} catch (err) {
+  // err ... will be the error passed-in to .destroy()
+}
+```
+
 ### Typescript recommendation
 
 Figuring out the proper typing was quite tricky for flexlock-cb.

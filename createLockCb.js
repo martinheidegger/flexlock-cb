@@ -70,5 +70,6 @@ module.exports = function createLockCb (onEveryRelease, onSyncError) {
   }
   flexLock.cb = flexLock
   flexLock.released = lock.released
+  flexLock.destroy = lock.destroy
   return flexLock
 }
