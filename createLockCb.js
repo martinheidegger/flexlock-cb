@@ -20,24 +20,37 @@ module.exports = function createLockCb (onEveryRelease, onSyncError) {
   if (typeof onSyncError !== 'function') {
     onSyncError = throwErr
   }
-  const flexLock = function (process, timeout, onFulfilled, onRejected) {
-    if (typeof timeout === 'function') {
-      if (typeof onFulfilled === 'function') {
-        return lock(process, onRejected, timeout, onFulfilled)
+  const flexLock = function (process, arg1, arg2, arg3) {
+    let timeout, onFulfilled, onRejected
+    if (typeof arg1 === 'function') {
+      onFulfilled = arg1
+      if (typeof arg2 === 'function') {
+        onRejected = arg2
+        timeout = arg3
+      } else {
+        timeout = arg2
       }
-      return lock(process, onFulfilled, function (data) {
-        timeout(null, data)
-      }, timeout)
+    } else {
+      timeout = arg1
+      if (typeof arg2 === 'function') {
+        onFulfilled = arg2
+        if (typeof arg3 === 'function') {
+          onRejected = arg3
+        }
+      }
     }
-    if (typeof onFulfilled !== 'function') {
+    if (typeof timeout !== 'number' || Number.isNaN(timeout)) {
+      timeout = 0
+    }
+    if (onFulfilled === undefined) {
       return toPromise(lock, process, timeout)
     }
-    if (typeof onRejected !== 'function') {
-      return lock(process, timeout, function (data) {
-        onFulfilled(null, data)
-      }, onFulfilled)
+    if (onRejected === undefined) {
+      onRejected = onFulfilled
+      onFulfilled = function (data) {
+        onRejected(null, data)
+      }
     }
-
     lock(process, timeout, onFulfilled, onRejected)
   }
   flexLock.syncWrap = function (syncProcess, timeout, onError) {
