@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/martinheidegger/flexlock-cb/compare/v2.2.0...v2.2.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* typescript declarations now support named arrays (typescript 4 feature) and better support a strict mode in which callbacks should accept either Error or null. ([2f5df1d](https://github.com/martinheidegger/flexlock-cb/commit/2f5df1d6bd645ba279ed1b44697283811c3b5086))
+
 ## [2.2.0](https://github.com/martinheidegger/flexlock-cb/compare/v2.1.1...v2.2.0) (2020-05-07)
 
 
