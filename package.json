@@ -18,9 +18,9 @@
   "author": "Martin Heidegger <martin.heidegger@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "standard": "^14.3.3",
-    "standard-version": "^7.1.0",
-    "tap": "^14.10.7"
+    "standard": "^14.3.4",
+    "standard-version": "^9.0.0",
+    "tap": "^14.10.8"
   },
   "directories": {
     "test": "test"
